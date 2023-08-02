@@ -5,7 +5,7 @@ const AnimatedModel: React.FC<AnimatedModelProps> = ({model}) => {
 
     useEffect(() => {
         return () => {
-            model.clear()
+            model.removeFromParent()
         }
     }, [model])
 

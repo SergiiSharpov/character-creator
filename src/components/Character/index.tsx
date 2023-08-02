@@ -1,10 +1,10 @@
-import {CameraControls, Html, Stage} from "@react-three/drei";
+import {Html, Stage, OrbitControls} from "@react-three/drei";
 import {useFrame, useLoader} from "@react-three/fiber";
 import {useEffect, useMemo, useState} from "react";
 import {AnimationMixer, AnimationObjectGroup, MeshPhongMaterial, MeshStandardMaterial} from "three";
 import {FBXLoader} from "three/examples/jsm/loaders/FBXLoader";
 import AnimatedModel from "../AnimatedModel";
-import {Select} from "../Select";
+import Select from "../Select";
 import {bottomModelsPaths, hairstylesModelsPaths, shoesModelsPaths, topModelsPaths} from "./constants";
 import {useAnimations} from "./hooks";
 import {AnimationTypeEnum} from "./types";
@@ -28,8 +28,6 @@ const Character = () => {
     const bottomModel = useFBX(modelsPaths['bottomModelPath']);
     const hairstylesModel = useFBX(modelsPaths['hairstyleModelPath']);
     const shoesModel = useFBX(modelsPaths['shoesModelPath']);
-
-    console.log({modelsPaths})
 
     const handleModelChange = (type: keyof typeof modelsPaths) => (value: string) => {
         setModelsPaths({
@@ -100,13 +98,19 @@ const Character = () => {
     return (
         <>
             <Stage adjustCamera={1} intensity={0.5} shadows="contact" environment="city">
-                <AnimatedModel animation={animation} model={character}/>
-                <AnimatedModel animation={animation} model={topModel}/>
-                <AnimatedModel animation={animation} model={bottomModel}/>
-                <AnimatedModel animation={animation} model={hairstylesModel}/>
-                <AnimatedModel animation={animation} model={shoesModel}/>
-                <CameraControls/>
+                <AnimatedModel  model={character}/>
+                <AnimatedModel model={topModel}/>
+                <AnimatedModel  model={bottomModel}/>
+                <AnimatedModel  model={hairstylesModel}/>
+                <AnimatedModel   model={shoesModel} />
             </Stage>
+
+            <OrbitControls
+                maxPolarAngle={75 * (Math.PI / 180)}
+                minPolarAngle={75 * (Math.PI / 180)}
+                enablePan={false}
+            />
+
             <Html
                 fullscreen
                 className='z-50 relative'

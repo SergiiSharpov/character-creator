@@ -1,6 +1,6 @@
 import {AnimationClip, Group} from "three";
 
 export type AnimatedModelProps = {
-    animation: AnimationClip
+    animation?: AnimationClip
     model: Group
 }
