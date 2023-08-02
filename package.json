@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@headlessui/react": "^1.7.15",
+    "@radix-ui/react-select": "^1.2.2",
     "@react-three/drei": "^9.70.5",
     "@react-three/fiber": "^8.13.0",
     "@testing-library/jest-dom": "^5.16.5",
@@ -47,5 +47,10 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "autoprefixer": "^10.4.14",
+    "postcss": "^8.4.27",
+    "tailwindcss": "^3.3.3"
   }
 }
