@@ -6,12 +6,11 @@ import {
     topModelsPaths
 } from "../../components/Character/constants";
 import {AnimationTypeEnum} from "../../components/Character/types";
-import {Select} from "../../components/ui";
+import Accordion from "../../components/ui/Accordion";
 import {AppearanceSettingsProps} from "./types";
 
 const AppearanceSettings = ({
-    handleAnimationChange,
-    modelsPaths,
+                                handleAnimationChange,
                                 handleModelChange
                             }: AppearanceSettingsProps) => {
     return (
@@ -24,32 +23,28 @@ const AppearanceSettings = ({
                 </button>
             </div>
 
-            <Select
-                type='top'
+            <Accordion
+                value={'top'}
                 list={topModelsPaths}
-                selected={modelsPaths['topModelPath']}
-                setSelected={handleModelChange('topModelPath')}
+                handleModelChange={handleModelChange('topModelPath')}
             />
 
-            <Select
-                type='bottom'
+            <Accordion
+                value='bottom'
                 list={bottomModelsPaths}
-                selected={modelsPaths['bottomModelPath']}
-                setSelected={handleModelChange('bottomModelPath')}
+                handleModelChange={handleModelChange('bottomModelPath')}
             />
 
-            <Select
-                type='shoes'
+            <Accordion
+                value={'shoes'}
                 list={shoesModelsPaths}
-                selected={modelsPaths['shoesModelPath']}
-                setSelected={handleModelChange('shoesModelPath')}
+                handleModelChange={handleModelChange('shoesModelPath')}
             />
 
-            <Select
-                type='hairstyles'
+            <Accordion
+                value={'hairstyles'}
                 list={hairstylesModelsPaths}
-                selected={modelsPaths['hairstyleModelPath']}
-                setSelected={handleModelChange('hairstyleModelPath')}
+                handleModelChange={handleModelChange('hairstyleModelPath')}
             />
         </div>
     );
