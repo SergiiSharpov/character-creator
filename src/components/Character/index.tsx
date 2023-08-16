@@ -1,4 +1,4 @@
-import {Html, MeshReflectorMaterial, OrbitControls, Stage, useFBX} from "@react-three/drei";
+import {Environment, Html, OrbitControls, Stage, useFBX} from "@react-three/drei";
 import {useFrame} from "@react-three/fiber";
 import {useEffect, useMemo, useState} from "react";
 import {AnimationMixer, AnimationObjectGroup, MeshPhongMaterial, MeshStandardMaterial} from "three";
@@ -97,38 +97,32 @@ const Character = () => {
 
     return (
         <>
-            <Stage adjustCamera={1} intensity={0.5} shadows="contact" environment="city">
-                <group>
+                <Stage
+                    adjustCamera={1} intensity={0.5} shadows="contact" environment="city"
+                    rotation={[0, Math.PI * .5, 0]}
+                >
                     <primitive
                         object={character}
                     />
-                </group>
-                <AnimatedModel model={topModel}/>
-                <AnimatedModel model={bottomModel}/>
-                <AnimatedModel model={hairstylesModel}/>
-                <AnimatedModel model={shoesModel}/>
-            </Stage>
+                    <AnimatedModel model={topModel}/>
+                    <AnimatedModel model={bottomModel}/>
+                    <AnimatedModel model={hairstylesModel}/>
+                    <AnimatedModel model={shoesModel}/>
 
-            <mesh rotation={[-Math.PI / 2, 0, 0]} position-y={-115}>
-                <planeGeometry args={[2470, 2470]} />
-                <MeshReflectorMaterial
-                    mirror={0.5}
-                    blur={[300, 100]}
-                    resolution={2048}
-                    mixBlur={1}
-                    mixStrength={40}
-                    roughness={.7}
-                    depthScale={1.2}
-                    minDepthThreshold={0.4}
-                    maxDepthThreshold={1.4}
-                    color="#101010"
-                    metalness={.7}
+                </Stage>
+
+                <Environment
+                    preset="dawn"
+                    background
+                    blur={1.4}
                 />
-            </mesh>
 
             <OrbitControls
                 maxPolarAngle={75 * (Math.PI / 180)}
                 minPolarAngle={75 * (Math.PI / 180)}
+                minAzimuthAngle={0}
+                maxAzimuthAngle={0}
+                makeDefault
                 enablePan={false}
             />
 
