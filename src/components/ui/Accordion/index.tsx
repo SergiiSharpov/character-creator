@@ -6,7 +6,7 @@ const Accordion = ({value, list, handleModelChange}: AccordionProps) => {
     return (
         <ReactAccordion type='multiple' className='min-w-[232px]'>
             <ReactAccordionItem value={value}>
-                <ReactAccordionTrigger>
+                <ReactAccordionTrigger className='text-white'>
                     {value} model
                 </ReactAccordionTrigger>
                 <ReactAccordionContent>

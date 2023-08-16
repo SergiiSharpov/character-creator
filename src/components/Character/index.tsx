@@ -1,4 +1,4 @@
-import {Html, OrbitControls, Stage, useFBX} from "@react-three/drei";
+import {Html, MeshReflectorMaterial, OrbitControls, Stage, useFBX} from "@react-three/drei";
 import {useFrame} from "@react-three/fiber";
 import {useEffect, useMemo, useState} from "react";
 import {AnimationMixer, AnimationObjectGroup, MeshPhongMaterial, MeshStandardMaterial} from "three";
@@ -108,6 +108,23 @@ const Character = () => {
                 <AnimatedModel model={hairstylesModel}/>
                 <AnimatedModel model={shoesModel}/>
             </Stage>
+
+            <mesh rotation={[-Math.PI / 2, 0, 0]} position-y={-115}>
+                <planeGeometry args={[2470, 2470]} />
+                <MeshReflectorMaterial
+                    mirror={0.5}
+                    blur={[300, 100]}
+                    resolution={2048}
+                    mixBlur={1}
+                    mixStrength={40}
+                    roughness={.7}
+                    depthScale={1.2}
+                    minDepthThreshold={0.4}
+                    maxDepthThreshold={1.4}
+                    color="#101010"
+                    metalness={.7}
+                />
+            </mesh>
 
             <OrbitControls
                 maxPolarAngle={75 * (Math.PI / 180)}
