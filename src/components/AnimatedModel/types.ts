@@ -2,5 +2,5 @@ import {AnimationClip, Group} from "three";
 
 export type AnimatedModelProps = {
     animation?: AnimationClip
-    model: Group
+    model: Group | null
 }

@@ -1,4 +1,4 @@
-import {ModelType} from "../Character/utils/generateModelPaths";
+import {ModelType} from "../../Character/utils/generateModelPaths";
 
 export type SelectProps = {
   // list: ListItemType[]
