@@ -5,9 +5,11 @@ const AnimatedModel: React.FC<AnimatedModelProps> = ({model}) => {
 
     useEffect(() => {
         return () => {
-            model.removeFromParent()
+            model && model.removeFromParent()
         }
     }, [model])
+
+    if(!model) return null
 
     return (
         <group>
