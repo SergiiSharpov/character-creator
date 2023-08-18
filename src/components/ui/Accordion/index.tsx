@@ -15,6 +15,7 @@ const Accordion = ({value, list, handleModelChange}: AccordionProps) => {
                             key={index}
                             className='w-10 h-10 bg-red-100 rounded-lg cursor-pointer grid place-items-center'
                             onClick={() => handleModelChange(item)}
+                            style={{ background: '#12c795', color: '#eee' }}
                         >
                             {item.replace(/\D/g, '')}
                         </div>

@@ -16,6 +16,7 @@
     "@types/react-dom": "^18.2.4",
     "@types/three": "^0.152.1",
     "clsx": "^2.0.0",
+    "framer-motion": "^10.16.0",
     "install": "^0.13.0",
     "leva": "^0.9.34",
     "lucide-react": "^0.268.0",
@@ -26,7 +27,8 @@
     "tailwind-merge": "^1.14.0",
     "three": "^0.153.0",
     "typescript": "^4.9.5",
-    "web-vitals": "^2.1.4"
+    "web-vitals": "^2.1.4",
+    "zustand": "^4.4.1"
   },
   "scripts": {
     "start": "react-scripts start",

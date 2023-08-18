@@ -1,11 +1,16 @@
 import {useEffect} from "react";
 import {AnimatedModelProps} from "./types";
+import { ObjectGroup } from "../Character";
 
 const AnimatedModel: React.FC<AnimatedModelProps> = ({model}) => {
 
     useEffect(() => {
+        if (!model) return
+
+        ObjectGroup.add(model)
         return () => {
-            model && model.removeFromParent()
+            ObjectGroup.remove(model)
+            model.removeFromParent()
         }
     }, [model])
 
