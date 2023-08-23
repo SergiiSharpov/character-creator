@@ -1,23 +1,24 @@
 import {useEffect} from "react";
-import {Box3, Vector3} from "three";
+import {useAppContextSelector} from "../../providers/ContextProvider";
 import {AnimatedModelProps} from "./types";
-import { ObjectGroup } from "../Character";
 
 const AnimatedModel: React.FC<AnimatedModelProps> = ({
                                                          model,
-}) => {
+                                                     }) => {
+
+    const animationObjectGroup = useAppContextSelector('animationObjectGroup')
 
     useEffect(() => {
         if (!model) return
 
-        // ObjectGroup.add(model)
+        animationObjectGroup.add(model)
         return () => {
-            // ObjectGroup.remove(model)
+            animationObjectGroup.remove(model)
             model.removeFromParent()
         }
     }, [model])
 
-    if(!model) return null
+    if (!model) return null
 
     return (
         <group>
