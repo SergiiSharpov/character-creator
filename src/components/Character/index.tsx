@@ -1,7 +1,7 @@
-import {Html, OrbitControls, Stage, useFBX} from "@react-three/drei";
+import {Html, OrbitControls, Stage, useFBX, useGLTF} from "@react-three/drei";
 import {useFrame} from "@react-three/fiber";
 import {useEffect, useState} from "react";
-import {AnimationMixer, AnimationObjectGroup, MeshPhongMaterial, MeshStandardMaterial} from "three";
+import {AnimationMixer, AnimationObjectGroup, Box3, MeshPhongMaterial, MeshStandardMaterial} from "three";
 import {useAsyncModel} from "../../hooks/useAsyncModel";
 import AppearanceSettings from "../../widgets/AppearanceSettings";
 import AnimatedModel from "../AnimatedModel";
@@ -14,7 +14,7 @@ const mixer = new AnimationMixer(ObjectGroup);
 
 const Character = () => {
 
-    const character = useFBX('/models/character.fbx');
+    const character = useGLTF('/models/character.glb');
 
     const [animation, handleAnimationChange] = useAnimations()
 
@@ -39,7 +39,7 @@ const Character = () => {
 
     useEffect(() => {
         if (!character) return
-        character.traverse((child: any) => {
+        character.scene.traverse((child: any) => {
             if (child.isMesh) {
                 const oldMat = child.material as (MeshPhongMaterial | MeshPhongMaterial[]);
 
@@ -78,6 +78,7 @@ const Character = () => {
     }, [character])
 
     useEffect(() => {
+        if(!character) return
         ObjectGroup.add(character);
 
         return () => {
@@ -85,8 +86,8 @@ const Character = () => {
         }
     }, [character])
 
-
     useEffect(() => {
+        if(!animation) return
         const action = mixer.clipAction(animation);
         action.reset().fadeIn(0.5).play()
 
@@ -101,10 +102,12 @@ const Character = () => {
 
     return (
         <>
-            <Stage adjustCamera={1}  environment={{ files: 'env/kiara_1_dawn_1k.hdr', background: true, blur: 0.75 }} >
+            <Stage adjustCamera={1} environment={{ files: 'env/kiara_1_dawn_1k.hdr', background: true, blur: 0.75 }} >
                 <group>
-                    <primitive object={character} />
+                    <primitive object={character.scene} />
                 </group>
+
+
                 <AnimatedModel model={topModel}/>
                 <AnimatedModel model={bottomModel}/>
                 <AnimatedModel model={hairstylesModel}/>
@@ -112,9 +115,10 @@ const Character = () => {
             </Stage>
 
             <OrbitControls
-                maxPolarAngle={75 * (Math.PI / 180)}
-                minPolarAngle={75 * (Math.PI / 180)}
-                enablePan={false}
+                // maxPolarAngle={75 * (Math.PI / 180)}
+                // minPolarAngle={75 * (Math.PI / 180)}
+                // enablePan={false}
+                makeDefault
             />
 
             <Html

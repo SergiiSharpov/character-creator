@@ -1,31 +1,22 @@
-import { Suspense, useEffect } from 'react'
-import { Canvas } from '@react-three/fiber'
-import { HomePage } from "./pages";
-import Loader, { useLoaderStore } from './components/Loader';
-
-const Fallback = () => {
-    const setLoading = useLoaderStore((state) => state.setLoading);
-
-    useEffect(() => {
-        setLoading(true);
-
-        return () => {
-            setLoading(false);
-        }
-    }, [setLoading])
-
-    return null;
-}
+import {Canvas} from '@react-three/fiber'
+import {Suspense} from 'react'
+import Fallback from "./components/Fallback";
+import Loader from './components/Loader';
+import {HomePage} from "./pages";
 
 const App = () => {
     return (
         <div className="w-screen h-screen overflow-hidden fixed inset-0">
-            <Suspense fallback={<Fallback />}>
-                <Canvas>
+            <Suspense fallback={<Fallback/>}>
+                <Canvas
+                    camera={{
+                        fov: 60
+                    }}
+                >
                     <HomePage/>
                 </Canvas>
             </Suspense>
-            <Loader />
+            <Loader/>
         </div>
     );
 }

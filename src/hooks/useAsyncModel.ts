@@ -1,15 +1,16 @@
 import {useEffect, useState} from "react";
 import {Group} from "three";
-import {FBXLoader} from "three/examples/jsm/loaders/FBXLoader";
+import {GLTFLoader} from "three/examples/jsm/loaders/GLTFLoader";
 
 export const useAsyncModel = (modelPath: string) => {
     const [model, setModel] = useState<Group | null>(null);
 
     useEffect(() => {
         const loadAsync = async () => {
-            const loader = new FBXLoader();
+            const loader = new GLTFLoader();
+
             const loadedModel = await loader.loadAsync(modelPath);
-            setModel(loadedModel);
+            setModel(loadedModel.scene);
         };
         loadAsync();
     }, [modelPath]);

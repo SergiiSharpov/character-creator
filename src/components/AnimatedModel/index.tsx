@@ -1,15 +1,18 @@
 import {useEffect} from "react";
+import {Box3, Vector3} from "three";
 import {AnimatedModelProps} from "./types";
 import { ObjectGroup } from "../Character";
 
-const AnimatedModel: React.FC<AnimatedModelProps> = ({model}) => {
+const AnimatedModel: React.FC<AnimatedModelProps> = ({
+                                                         model,
+}) => {
 
     useEffect(() => {
         if (!model) return
 
-        ObjectGroup.add(model)
+        // ObjectGroup.add(model)
         return () => {
-            ObjectGroup.remove(model)
+            // ObjectGroup.remove(model)
             model.removeFromParent()
         }
     }, [model])
