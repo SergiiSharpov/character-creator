@@ -2,7 +2,7 @@ import React from 'react';
 import {
     bottomModelsPaths,
     hairstylesModelsPaths,
-    shoesModelsPaths,
+    shoesModelsPaths, skinColors,
     topModelsPaths
 } from "../../components/Character/constants";
 import {AnimationTypeEnum} from "../../components/Character/types";
@@ -11,13 +11,14 @@ import {AppearanceSettingsProps} from "./types";
 
 const AppearanceSettings = ({
                                 handleAnimationChange,
-                                handleModelChange
+                                handleModelChange,
+                                handleSetSkinColor
                             }: AppearanceSettingsProps) => {
+
     return (
         <div 
-            className='absolute top-14 right-14 z-50 grid gap-10'
+            className='absolute top-14 right-14 z-50 grid gap-10 overflow-auto max-h-[873px]'
             style={{
-                // backgroundColor: 'rgba(64, 181, 148, 0.1)',
                 backgroundColor: 'rgba(0, 50, 40, 0.1)',
                 borderRadius: '10px',
                 padding: '16px',
@@ -54,6 +55,13 @@ const AppearanceSettings = ({
                 value={'hairstyles'}
                 list={hairstylesModelsPaths}
                 handleModelChange={handleModelChange('hairstyleModelPath')}
+            />
+
+            <Accordion
+                value={'skin'}
+                list={skinColors}
+                handleModelChange={handleSetSkinColor}
+                handleSetSkinColor={handleSetSkinColor}
             />
         </div>
     );

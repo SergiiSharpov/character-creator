@@ -7687,6 +7687,13 @@ leva@^0.9.34:
     v8n "^1.3.3"
     zustand "^3.6.9"
 
+leve@^1.2.1:
+  version "1.2.1"
+  resolved "https://registry.npmjs.org/leve/-/leve-1.2.1.tgz"
+  integrity sha512-ODozE7Zei2y/WsoxxrowBKg/hr+E4qlbJdbD5+Wkz5gs2SAAgjEnjWfeoh6fNsJfKZccoqwqXaAG+vxZJ6+uhw==
+  dependencies:
+    prelude-ls "~1.0.3"
+
 leven@^3.1.0:
   version "3.1.0"
   resolved "https://registry.npmjs.org/leven/-/leven-3.1.0.tgz"
@@ -9511,6 +9518,11 @@ prelude-ls@^1.2.1:
   version "1.2.1"
   resolved "https://registry.npmjs.org/prelude-ls/-/prelude-ls-1.2.1.tgz"
   integrity sha512-vkcDPrRZo1QZLbn5RLGPpg/WmIQ65qoWWhcGKf/b5eplkkarX0m9z8ppCat4mlOqUsWpyNuYgO3VRyrYHSzX5g==
+
+prelude-ls@~1.0.3:
+  version "1.0.3"
+  resolved "https://registry.npmjs.org/prelude-ls/-/prelude-ls-1.0.3.tgz"
+  integrity sha512-Cda7NSAR/gfs9hHfgHNFLW2911sNzL4ZiZS+0jZUYoPaUISpO9JwNPq0iTR3UE6gDfBGfdBCM/MtibExXxCZ2Q==
 
 prelude-ls@~1.1.2:
   version "1.1.2"
