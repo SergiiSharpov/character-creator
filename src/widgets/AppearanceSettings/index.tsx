@@ -17,7 +17,7 @@ const AppearanceSettings = ({
 
     return (
         <div 
-            className='absolute top-14 right-14 z-50 grid gap-10 overflow-auto max-h-[873px]'
+            className='absolute top-14 right-14 z-50 grid gap-10 overflow-auto max-h-[90vh]'
             style={{
                 backgroundColor: 'rgba(0, 50, 40, 0.1)',
                 borderRadius: '10px',
