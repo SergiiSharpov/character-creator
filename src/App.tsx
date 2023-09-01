@@ -10,7 +10,8 @@ const App = () => {
             <Suspense fallback={<Fallback/>}>
                 <Canvas
                     camera={{
-                        fov: 60
+                        fov: 60,
+                        position: [0, 2, 2],
                     }}
                 >
                     <HomePage/>
