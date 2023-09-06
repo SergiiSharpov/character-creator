@@ -54,6 +54,7 @@ const Character = () => {
     const shoesModel = useAsyncModel(modelsPaths['shoesModelPath']);
 
     const handleModelChange = (type: keyof ModelsPathsType) => (value: string) => {
+        handleAnimationChange()
         setModelsPaths(state => ({
             ...state,
             [type]: value
@@ -155,7 +156,6 @@ const Character = () => {
             >
                 <AppearanceSettings
                     handleSetSkinColor={handleSetSkinColor}
-                    handleAnimationChange={handleAnimationChange}
                     modelsPaths={modelsPaths}
                     handleModelChange={handleModelChange}
                 />

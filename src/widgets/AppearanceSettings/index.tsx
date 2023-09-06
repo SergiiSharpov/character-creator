@@ -5,12 +5,10 @@ import {
     shoesModelsPaths, skinColors,
     topModelsPaths
 } from "../../components/Character/constants";
-import {AnimationTypeEnum} from "../../components/Character/types";
 import Accordion from "../../components/ui/Accordion";
 import {AppearanceSettingsProps} from "./types";
 
 const AppearanceSettings = ({
-                                handleAnimationChange,
                                 handleModelChange,
                                 handleSetSkinColor
                             }: AppearanceSettingsProps) => {
@@ -25,14 +23,6 @@ const AppearanceSettings = ({
                 userSelect: 'none'
             }}
         >
-
-            <div className='flex gap-2'>
-                <button onClick={handleAnimationChange(AnimationTypeEnum.Idle)} className='ui__btn'>Idle
-                </button>
-                <button onClick={handleAnimationChange(AnimationTypeEnum.Walk)} className='ui__btn'>Walk
-                </button>
-            </div>
-
             <Accordion
                 value={'top'}
                 list={topModelsPaths}
