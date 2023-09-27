@@ -1,10 +1,10 @@
-import {useGLTF} from "@react-three/drei";
+import {useAnimations as useDreiAnimations, useGLTF} from "@react-three/drei";
+import {useFrame} from "@react-three/fiber";
 import {useEffect, useMemo, useState} from "react";
-import {AnimationClip} from "three";
+import {AnimationMixer} from "three";
+import {useAppContextSelector} from "../../../providers/ContextProvider";
 
-type HookReturnType = [AnimationClip, ()  => void]
-
-export const useAnimations = (): HookReturnType => {
+export const useAnimations = () => {
     const [animationIndex, setAnimationIndex] = useState(0);
 
     const idle = useGLTF('/animations/idle.glb');
@@ -13,6 +13,23 @@ export const useAnimations = (): HookReturnType => {
     const dance = useGLTF('/animations/dance.glb');
     const pointing = useGLTF('/animations/pointing.glb');
     const surprised = useGLTF('/animations/surprised.glb');
+
+    const animationObjectGroup = useAppContextSelector('animationObjectGroup')
+
+    const [mixer] = useState(() => new AnimationMixer(animationObjectGroup))
+
+    console.log({idle})
+
+    const animationData = useDreiAnimations(
+        [idle.animations[0],
+            walk.animations[0],
+            charge.animations[0],
+            dance.animations[0],
+            pointing.animations[0],
+            surprised.animations[0]
+        ])
+
+    console.log({animationData})
 
     const animations = useMemo(() => {
         const idleAnimation = idle.animations[0];
@@ -26,7 +43,7 @@ export const useAnimations = (): HookReturnType => {
             walkAnimation,
             idleAnimation,
             chargeAnimation,
-             danceAnimation,
+            danceAnimation,
             pointingAnimation,
             surprisedAnimation,
         ]
@@ -36,20 +53,20 @@ export const useAnimations = (): HookReturnType => {
 
     const generateRandomAnimationIndex = () => {
         let randomIndex = Math.floor(Math.random() * animations.length)
-        while(randomIndex === animationIndex) {
+        while (randomIndex === animationIndex) {
             randomIndex = Math.floor(Math.random() * animations.length)
         }
         return randomIndex
     }
 
-    const handleAnimationRandomChange = () => {
+    const handleAnimationChange = () => {
         setAnimationIndex(generateRandomAnimationIndex())
     }
 
     useEffect(() => {
         let timeoutId: NodeJS.Timeout | null = null
 
-        if(animationIndex && animation) {
+        if (animationIndex && animation) {
             const animationDuration = animation.duration * 1000
 
             timeoutId = setTimeout(() => {
@@ -61,5 +78,19 @@ export const useAnimations = (): HookReturnType => {
 
     }, [animationIndex])
 
-    return [animation, handleAnimationRandomChange]
+    useEffect(() => {
+        if (!animation) return
+        const action = mixer.clipAction(animation);
+        action.reset().fadeIn(0.5).play()
+
+        return () => {
+            action.fadeOut(0.5)
+        }
+    }, [animation])
+
+    useFrame((state, delta) => {
+        mixer && mixer.update(delta);
+    })
+
+    return {handleAnimationChange}
 }

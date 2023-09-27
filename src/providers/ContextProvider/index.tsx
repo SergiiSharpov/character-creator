@@ -2,8 +2,10 @@ import React, {createContext, useContext, useState} from 'react';
 import {AnimationObjectGroup} from "three";
 import {ContextProviderProps, ContextType} from "./types";
 
+const animationObjectGroup = new AnimationObjectGroup()
+
 const Context = createContext<ContextType>({
-    animationObjectGroup: new AnimationObjectGroup()
+    animationObjectGroup
 });
 
 const ContextProvider = ({
@@ -11,7 +13,7 @@ const ContextProvider = ({
                          }: ContextProviderProps) => {
 
     const [state, setState] = useState<ContextType>({
-        animationObjectGroup: new AnimationObjectGroup()
+        animationObjectGroup
     })
 
     return (

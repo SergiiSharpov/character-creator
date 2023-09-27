@@ -1,39 +1,20 @@
 import {Html, OrbitControls, Stage, useGLTF} from "@react-three/drei";
-import {useFrame} from "@react-three/fiber";
-import {useControls} from "leva";
-import React, {useEffect, useMemo, useRef, useState} from "react";
-import {AnimationMixer, Group, MeshPhongMaterial, MeshStandardMaterial} from "three";
+import React, {useEffect, useState} from "react";
 import {useAsyncModel} from "../../hooks/useAsyncModel";
-import {useAppContextSelector} from "../../providers/ContextProvider";
 import AppearanceSettings from "../../widgets/AppearanceSettings";
 import AnimatedModel from "../AnimatedModel";
-import {bottomModelsPaths, hairstylesModelsPaths, shoesModelsPaths, skinColors, topModelsPaths} from "./constants";
+import {bottomModelsPaths, hairstylesModelsPaths, shoesModelsPaths, topModelsPaths} from "./constants";
 import {useAnimations} from "./hooks";
+import {useMaterials} from "./hooks/useMaterials";
 import {ModelsPathsType} from "./types";
 
 const Character = () => {
 
-    const animationObjectGroup = useAppContextSelector('animationObjectGroup')
-    const [mixer] = useState(() => new AnimationMixer(animationObjectGroup))
-
-    const groupRef = useRef<Group | null>(null);
-
     const character = useGLTF('/models/character.glb');
+    const blendshape = useGLTF('/models/blendshapes.glb');
+    const character__ = useGLTF('/models/character__.glb');
 
-    const {playAudio} = useControls({playAudio: false})
-
-    const audio = useMemo(() => new Audio('/voice/test-voice.mp3'), [])
-
-    useEffect(() => {
-        if (playAudio) audio.play()
-        else audio.pause()
-
-        return () => {
-            audio.pause()
-        }
-    }, [playAudio])
-
-    const [animation, handleAnimationChange] = useAnimations()
+    const {handleAnimationChange} = useAnimations()
 
     const [modelsPaths, setModelsPaths] = useState<ModelsPathsType>({
         topModelPath: topModelsPaths[0],
@@ -42,13 +23,7 @@ const Character = () => {
         shoesModelPath: shoesModelsPaths[0],
     })
 
-    const [skinColor, setSkinColor] = useState(skinColors[0])
-
-    const handleSetSkinColor = (value: string) => {
-        setSkinColor(value)
-    }
-
-    const topModel = useAsyncModel(modelsPaths['topModelPath']) // useFBX(modelsPaths['topModelPath']);
+    const topModel = useAsyncModel(modelsPaths['topModelPath'])
     const bottomModel = useAsyncModel(modelsPaths['bottomModelPath']);
     const hairstylesModel = useAsyncModel(modelsPaths['hairstyleModelPath']);
     const shoesModel = useAsyncModel(modelsPaths['shoesModelPath']);
@@ -61,67 +36,16 @@ const Character = () => {
         }))
     }
 
-    useEffect(() => {
-        if (!character) return
-        character.scene.traverse((child: any) => {
-            if (child.isMesh) {
-                const oldMat = child.material as (MeshPhongMaterial | MeshPhongMaterial[]);
-
-                const oldMaterials: Array<MeshPhongMaterial> = [];
-                if (oldMat instanceof Array) {
-                    oldMaterials.push(...oldMat);
-                } else {
-                    oldMaterials.push(oldMat);
-                }
-
-                const nextMaterials: Array<MeshStandardMaterial> = [];
-                oldMaterials.forEach((oldMat) => {
-                    const newMat = new MeshStandardMaterial({
-                        map: oldMat.map,
-                        normalMap: oldMat.normalMap,
-                        envMap: oldMat.envMap,
-                        aoMap: oldMat.aoMap,
-                        color: skinColor,
-                        aoMapIntensity: oldMat.aoMapIntensity,
-                        side: oldMat.side,
-                        transparent: oldMat.transparent,
-                        opacity: oldMat.opacity,
-                        name: oldMat.name,
-                    })
-                    nextMaterials.push(newMat);
-                })
-
-                if (nextMaterials.length === 1) {
-                    child.material = nextMaterials[0];
-                } else {
-                    child.material = nextMaterials;
-                }
-            }
-        })
-    }, [character, skinColor])
+    const {handleSetSkinColor} = useMaterials(character__)
 
     useEffect(() => {
-        if (!character) return
-        animationObjectGroup.add(character.scene);
-
-        return () => {
-            animationObjectGroup.remove(character.scene);
-        }
-    }, [character])
-
-    useEffect(() => {
-        if (!animation) return
-        const action = mixer.clipAction(animation);
-        action.reset().fadeIn(0.5).play()
-
-        return () => {
-            action.fadeOut(0.5)
-        }
-    }, [animation])
-
-    useFrame((state, delta) => {
-        mixer && mixer.update(delta);
-    })
+        if (!character__) return
+        // animationObjectGroup.add(character__.scene);
+        //
+        // return () => {
+        //     animationObjectGroup.remove(character__.scene);
+        // }
+    }, [character__])
 
     return (
         <>
@@ -130,8 +54,12 @@ const Character = () => {
                 environment={{files: 'env/kiara_1_dawn_1k.hdr', background: true, blur: 0.75}}
             >
 
-                <group dispose={null} ref={groupRef}>
-                    <primitive object={character.scene}/>
+                {/*<group dispose={null} ref={groupRef}>*/}
+                {/*    <primitive object={character.scene}/>*/}
+                {/*</group>*/}
+
+                <group>
+                    <primitive object={character__.scene}/>
                 </group>
 
 
