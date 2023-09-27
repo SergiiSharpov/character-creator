@@ -36,7 +36,7 @@ const Character = () => {
         }))
     }
 
-    const {handleSetSkinColor} = useMaterials(character__)
+    const {handleSetMaterialColor} = useMaterials(character__)
 
     useEffect(() => {
         if (!character__) return
@@ -83,7 +83,7 @@ const Character = () => {
                 className='z-50 relative'
             >
                 <AppearanceSettings
-                    handleSetSkinColor={handleSetSkinColor}
+                    handleSetSkinColor={handleSetMaterialColor}
                     modelsPaths={modelsPaths}
                     handleModelChange={handleModelChange}
                 />

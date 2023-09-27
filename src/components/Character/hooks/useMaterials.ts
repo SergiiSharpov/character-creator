@@ -7,7 +7,7 @@ export const useMaterials = (model: GLTF) => {
 
     const [skinColor, setSkinColor] = useState(skinColors[0])
 
-    const handleSetSkinColor = (value: string) => {
+    const handleSetMaterialColor = (value: string) => {
         setSkinColor(value)
     }
 
@@ -54,5 +54,5 @@ export const useMaterials = (model: GLTF) => {
         })
     }, [model, skinColor])
 
-    return {handleSetSkinColor}
+    return {handleSetMaterialColor}
 }
