@@ -3,17 +3,12 @@ import {useControls} from "leva";
 import {useEffect, useMemo} from "react";
 import {FileLoader} from "three";
 import {GLTF} from "three/examples/jsm/loaders/GLTFLoader";
+import {visemeTeeth1, visemeTeeth2, visemeTongue} from "../constants";
+import {setMorphTarget} from "../utils/setMorphTarget";
 
-const test = {
-    'B': 'CC_Base_Phonemes.EE',
-    'C': 'CC_Base_Phonemes.AE',
-    // 'D': 'CC_Base_Phonemes.AO',
-    'E': 'CC_Base_Phonemes.Er',
-    'F': 'CC_Base_Phonemes.W_OO',
-    'G': 'CC_Base_Phonemes.F_V',
-    'H': 'CC_Base_Phonemes.T_L_D_N',
-    'X': 'CC_Base_Phonemes.B_M_P'
-}
+// Game_Tongue
+// Base_Teeth_1
+// Base_Teeth_2
 
 export const useAudio = (model: GLTF) => {
     const {playAudio} = useControls({playAudio: false})
@@ -24,23 +19,22 @@ export const useAudio = (model: GLTF) => {
 
     useFrame(() => {
 
-        Object.values(test).forEach((value: string) => {
-            // @ts-ignore
-            const morphTarget = model.nodes['CC_Base_Head'].morphTargetDictionary[value]
-            // @ts-ignore
-            const morphTargetInfluences = model.nodes['CC_Base_Head'].morphTargetInfluences
-            morphTargetInfluences[morphTarget] = 0
+        Object.values(visemeTongue).forEach((value: string) => {
+            setMorphTarget(model, 'Game_Tongue', value, 0)
+        })
+
+        Object.values(visemeTeeth1).forEach((value: string) => {
+            setMorphTarget(model, 'Base_Teeth_2', value, 0)
+            setMorphTarget(model, 'Base_Teeth_1', value, 0)
         })
 
         const currentAudioTime = audio.currentTime
         for (let i = 0; i < lipsync.mouthCues.length; i++) {
             const mouseCue = lipsync.mouthCues[i]
             if(currentAudioTime >= mouseCue.start && currentAudioTime <= mouseCue.end) {
-                // @ts-ignore
-                const morphTarget = model.nodes['CC_Base_Head'].morphTargetDictionary[test[mouseCue.value]]
-                // @ts-ignore
-                const morphTargetInfluences = model.nodes['CC_Base_Head'].morphTargetInfluences
-                morphTargetInfluences[morphTarget] = 1
+                setMorphTarget(model, 'Base_Teeth_2', visemeTeeth2[mouseCue.value], 1)
+                setMorphTarget(model, 'Base_Teeth_1', visemeTeeth2[mouseCue.value], 1)
+                setMorphTarget(model, 'Game_Tongue', visemeTongue[mouseCue.value], 1)
             }
         }
     })

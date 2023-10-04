@@ -1,35 +1,23 @@
-import {useAnimations as useDreiAnimations, useGLTF} from "@react-three/drei";
+import {useGLTF} from "@react-three/drei";
 import {useFrame} from "@react-three/fiber";
 import {useEffect, useMemo, useState} from "react";
 import {AnimationMixer} from "three";
+import {GLTF} from "three/examples/jsm/loaders/GLTFLoader";
 import {useAppContextSelector} from "../../../providers/ContextProvider";
 
-export const useAnimations = () => {
+export const useAnimations = (model: GLTF) => {
     const [animationIndex, setAnimationIndex] = useState(0);
 
     const idle = useGLTF('/animations/idle.glb');
     const walk = useGLTF('/animations/walk.glb');
-    const charge = useGLTF('/animations/charge.glb');
-    const dance = useGLTF('/animations/dance.glb');
-    const pointing = useGLTF('/animations/pointing.glb');
-    const surprised = useGLTF('/animations/surprised.glb');
+    const charge = useGLTF('/animations/__charge.glb');
+    const dance = useGLTF('/animations/__dancing.glb');
+    const pointing = useGLTF('/animations/__pointingGesture.glb');
+    const surprised = useGLTF('/animations/__surptised.glb');
 
     const animationObjectGroup = useAppContextSelector('animationObjectGroup')
 
     const [mixer] = useState(() => new AnimationMixer(animationObjectGroup))
-
-    console.log({idle})
-
-    const animationData = useDreiAnimations(
-        [idle.animations[0],
-            walk.animations[0],
-            charge.animations[0],
-            dance.animations[0],
-            pointing.animations[0],
-            surprised.animations[0]
-        ])
-
-    console.log({animationData})
 
     const animations = useMemo(() => {
         const idleAnimation = idle.animations[0];
@@ -76,7 +64,7 @@ export const useAnimations = () => {
 
         return () => clearTimeout(timeoutId as NodeJS.Timeout)
 
-    }, [animationIndex])
+    }, [animationIndex, animation])
 
     useEffect(() => {
         if (!animation) return
@@ -87,6 +75,15 @@ export const useAnimations = () => {
             action.fadeOut(0.5)
         }
     }, [animation])
+
+    useEffect(() => {
+        if (!model) return
+        animationObjectGroup.add(model.scene);
+
+        return () => {
+            animationObjectGroup.remove(model.scene);
+        }
+    }, [model])
 
     useFrame((state, delta) => {
         mixer && mixer.update(delta);

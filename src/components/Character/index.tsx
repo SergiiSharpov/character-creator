@@ -1,20 +1,19 @@
 import {Html, OrbitControls, Stage, useGLTF} from "@react-three/drei";
-import React, {useEffect, useState} from "react";
+import React, {useState} from "react";
 import {useAsyncModel} from "../../hooks/useAsyncModel";
 import AppearanceSettings from "../../widgets/AppearanceSettings";
 import AnimatedModel from "../AnimatedModel";
 import {bottomModelsPaths, hairstylesModelsPaths, shoesModelsPaths, topModelsPaths} from "./constants";
 import {useAnimations} from "./hooks";
+import {useAudio} from "./hooks/useAudio";
 import {useMaterials} from "./hooks/useMaterials";
 import {ModelsPathsType} from "./types";
 
 const Character = () => {
 
-    const character = useGLTF('/models/character.glb');
-    const blendshape = useGLTF('/models/blendshapes.glb');
-    const character__ = useGLTF('/models/character__.glb');
+    const thad = useGLTF('/models/thad.glb');
 
-    const {handleAnimationChange} = useAnimations()
+    const {handleAnimationChange} = useAnimations(thad)
 
     const [modelsPaths, setModelsPaths] = useState<ModelsPathsType>({
         topModelPath: topModelsPaths[0],
@@ -36,16 +35,11 @@ const Character = () => {
         }))
     }
 
-    const {handleSetMaterialColor} = useMaterials(character__)
+    const {handleSetMaterialColor} = useMaterials(thad)
 
-    useEffect(() => {
-        if (!character__) return
-        // animationObjectGroup.add(character__.scene);
-        //
-        // return () => {
-        //     animationObjectGroup.remove(character__.scene);
-        // }
-    }, [character__])
+    console.log({thad})
+
+    useAudio(thad)
 
     return (
         <>
@@ -54,12 +48,8 @@ const Character = () => {
                 environment={{files: 'env/kiara_1_dawn_1k.hdr', background: true, blur: 0.75}}
             >
 
-                {/*<group dispose={null} ref={groupRef}>*/}
-                {/*    <primitive object={character.scene}/>*/}
-                {/*</group>*/}
-
                 <group>
-                    <primitive object={character__.scene}/>
+                    <primitive object={thad.scene}/>
                 </group>
 
 
