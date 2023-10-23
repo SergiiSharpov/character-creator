@@ -12,4 +12,5 @@ export type ModelsPathsType = {
     bottomModelPath: string,
     hairstyleModelPath: string,
     shoesModelPath: string,
+    accessoriesModelPath: string
 }

@@ -47,8 +47,12 @@ export const useAnimations = (model: GLTF) => {
         return randomIndex
     }
 
-    const handleAnimationChange = () => {
+    const handleAnimationRandomChange = () => {
         setAnimationIndex(generateRandomAnimationIndex())
+    }
+
+    const handleSetAnimation = <T>(key: T) => {
+        setAnimationIndex(key as number)
     }
 
     useEffect(() => {
@@ -89,5 +93,5 @@ export const useAnimations = (model: GLTF) => {
         mixer && mixer.update(delta);
     })
 
-    return {handleAnimationChange}
+    return {handleAnimationRandomChange, handleSetAnimation}
 }

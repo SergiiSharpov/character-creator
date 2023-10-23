@@ -4,9 +4,7 @@ import Character from "../../components/Character";
 const HomePage = () => {
 
     return (
-        <>
             <Character/>
-        </>
     );
 };
 
