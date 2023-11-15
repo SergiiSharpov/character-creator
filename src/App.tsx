@@ -18,7 +18,7 @@ const App = () => {
                     <HomePage/>
                 </Canvas>
             </Suspense>
-            {/*<Loader/>*/}
+            <Loader/>
         </div>
     );
 }

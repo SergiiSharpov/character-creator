@@ -1,17 +1,23 @@
-import {AccumulativeShadows, Environment, Html, OrbitControls, RandomizedLight, useGLTF, useAnimations as useAnimationsDrei} from "@react-three/drei";
-import {useFrame, useThree} from "@react-three/fiber";
+import {AccumulativeShadows, Environment, OrbitControls, RandomizedLight, useGLTF} from "@react-three/drei";
+import {useThree} from "@react-three/fiber";
 
 import gsap from 'gsap'
 import React, {useCallback, useEffect, useRef, useState} from "react";
-import {AnimationMixer, Group, Quaternion, Vector3, Event} from "three";
+import {Group, Quaternion, Vector3} from "three";
 import {useAsyncModel} from "../../hooks/useAsyncModel";
 import {useAppContextSelector} from "../../providers/ContextProvider";
 import {useLoaderStore} from "../../store";
+import AnimatedModel from "../AnimatedModel";
 import {
+    accessoriesModelAnnotation,
     accessoriesModelsPaths,
+    bottomModelAnnotation,
     bottomModelsPaths,
+    hairstyleModelAnnotation,
     hairstylesModelsPaths,
+    shoesModelAnnotation,
     shoesModelsPaths,
+    topModelAnnotation,
     topModelsPaths
 } from "./constants";
 import {useAnimations} from "./hooks";
@@ -31,72 +37,13 @@ const hair = {
 };
 
 const Character = () => {
-    // const thad = useGLTF('/models/thad.glb');
-    // const thad = useGLTF('/models/thad.glb');
-    const thad = useGLTF('/models/thad_.glb');
-
-    console.log({thad})
-
-    const loading = useLoaderStore(state => state.loading)
+    const thad = useGLTF('/models/thad.glb');
 
     const groupRefAnimation = useRef<Group | null>(null);
 
-    const [thadAnimationName, setThadAnimationNamer] = useState('walk')
-
-    const thadRef = useRef<Group | null>(null);
-
-    const {actions, mixer, clips, names} = useAnimationsDrei(thad.animations, thadRef)
-
-    console.log({actions, mixer, clips, names})
-
-    useEffect(() => {
-        if(!actions || !mixer || loading) return
-        const action = actions['All Animations']
-
-        if(!action) return
-
-        action.reset().fadeIn(0.5).play()
-        // action.time = 8.758
-        mixer.update(8.758)
-
-        const mixerEvent = (event:  Event) => {
-            console.log('mixer event', {event})
-        }
-
-        mixer.addEventListener('loop', mixerEvent)
-
-        return () => {
-            action.fadeOut(0.5).stop()
-
-            mixer.removeEventListener('loop', mixerEvent)
-        }
-
-    }, [actions, mixer, loading])
-
-    useFrame(() => {
-        if (!mixer || loading || !actions) return
-
-        const action = actions['All Animations']
-
-        if(!action) return
-
-        const time = mixer.time
-        console.log(time)
-        if(thadAnimationName === 'walk' && time >= 10.11) {
-            console.log('end of animation')
-            // action.fadeOut(0.5)
-            mixer.time = 8.758
-
-            action.time = 8.758
-
-            // mixer.update(8.758)
-        }
-
-    })
-
     const animationObjectGroup = useAppContextSelector('animationObjectGroup')
 
-    const {handleAnimationRandomChange, handleSetAnimation} = useAnimations(groupRefAnimation)
+    const {handleAnimationRandomChange} = useAnimations()
 
     const camera = useThree(state => state.camera)
 
@@ -170,63 +117,16 @@ const Character = () => {
         }
     }, []);
 
-    // const {x, y, z} = useControls({
-    //     y: {
-    //         value: 0,
-    //         step: 0.05
-    //     },
-    //     x: {
-    //         value: 0,
-    //         step: 0.05
-    //     },
-    //     z: {
-    //         value: 0,
-    //         step: 0.05
-    //     }
-    // })
-    //
-    // const {xR, yR, zR} = useControls({
-    //     yR: {
-    //         value: 0,
-    //         step: 0.01
-    //     },
-    //     xR: {
-    //         value: -0.229,
-    //         step: 0.01
-    //     },
-    //     zR: {
-    //         value: 0,
-    //         step: 0.01
-    //     }
-    // })
-
-    const scene = useThree(state => state.scene);
-
-    // useEffect(() => {
-    //     if (!thad) return
-    //     const helpers: SkeletonHelper[] = []
-    //     console.log({thad})
-    //
-    //     helpers.push(new SkeletonHelper(thad.scene?.children[0]))
-    //     helpers.forEach((helper) => {
-    //         scene.add(helper);
-    //     })
-    //
-    //     return () => {
-    //         helpers.forEach((helper) => {
-    //             scene.remove(helper);
-    //         })
-    //     }
-    //
-    // }, [thad])
-
-    // useEffect(() => {
-    //     console.log(camera.position, 'camera position')
-    // }, [camera]);
-
     useEffect(() => {
 
-    }, []);
+        if (!animationObjectGroup || !thad.scene) return
+
+        animationObjectGroup.add(thad.scene)
+        return () => {
+            animationObjectGroup.remove(thad.scene)
+            thad.scene.removeFromParent()
+        }
+    }, [thad]);
 
     return (
         <>
@@ -235,72 +135,60 @@ const Character = () => {
                 ref={groupRefAnimation}
             >
 
-                {/*<AnimatedModel*/}
-                {/*    name='top'*/}
-                {/*    cameraToDefault={cameraToDefault}*/}
-                {/*    handleModelChange={handleModelChange('topModelPath')}*/}
-                {/*    onClick={handleCameraMove}*/}
-                {/*    model={topModel}*/}
-                {/*    handleCameraMove={handleCameraMove}*/}
-                {/*    {...topModelAnnotation}*/}
-                {/*/>*/}
-
-                {/*<primitive*/}
-                {/*    name='top'*/}
-                {/*    object={top.scene}*/}
-                {/*/>*/}
-
-                <group ref={thadRef}>
+                <group>
                     <primitive
                         name='thad'
                         object={thad.scene}
                     />
                 </group>
 
-                <Html>
-                    <button
-                        onClick={handleAnimationRandomChange}
-                    >change animation
-                    </button>
-                </Html>
+                <AnimatedModel
+                    name='top'
+                    cameraToDefault={cameraToDefault}
+                    handleModelChange={handleModelChange('topModelPath')}
+                    onClick={handleCameraMove}
+                    model={topModel}
+                    handleCameraMove={handleCameraMove}
+                    {...topModelAnnotation}
+                />
 
-                {/*<AnimatedModel*/}
-                {/*    name='bottom'*/}
-                {/*    cameraToDefault={cameraToDefault}*/}
-                {/*    handleModelChange={handleModelChange('bottomModelPath')}*/}
-                {/*    onClick={handleCameraMove}*/}
-                {/*    handleCameraMove={handleCameraMove}*/}
-                {/*    model={bottomModel}*/}
-                {/*    {...bottomModelAnnotation}*/}
-                {/*/>*/}
-                {/*<AnimatedModel*/}
-                {/*    name='hairstyles'*/}
-                {/*    cameraToDefault={cameraToDefault}*/}
-                {/*    handleModelChange={handleModelChange('hairstyleModelPath')}*/}
-                {/*    onClick={handleCameraMove}*/}
-                {/*    model={hairstylesModel}*/}
-                {/*    handleCameraMove={handleCameraMove}*/}
-                {/*    {...hairstyleModelAnnotation}*/}
-                {/*/>*/}
-                {/*<AnimatedModel*/}
-                {/*    name='shoes'*/}
-                {/*    cameraToDefault={cameraToDefault}*/}
-                {/*    handleModelChange={handleModelChange('shoesModelPath')}*/}
-                {/*    onClick={handleCameraMove}*/}
-                {/*    model={shoesModel}*/}
-                {/*    handleCameraMove={handleCameraMove}*/}
-                {/*    {...shoesModelAnnotation}*/}
-                {/*/>*/}
+                <AnimatedModel
+                    name='bottom'
+                    cameraToDefault={cameraToDefault}
+                    handleModelChange={handleModelChange('bottomModelPath')}
+                    onClick={handleCameraMove}
+                    handleCameraMove={handleCameraMove}
+                    model={bottomModel}
+                    {...bottomModelAnnotation}
+                />
+                <AnimatedModel
+                    name='hairstyles'
+                    cameraToDefault={cameraToDefault}
+                    handleModelChange={handleModelChange('hairstyleModelPath')}
+                    onClick={handleCameraMove}
+                    model={hairstylesModel}
+                    handleCameraMove={handleCameraMove}
+                    {...hairstyleModelAnnotation}
+                />
+                <AnimatedModel
+                    name='shoes'
+                    cameraToDefault={cameraToDefault}
+                    handleModelChange={handleModelChange('shoesModelPath')}
+                    onClick={handleCameraMove}
+                    model={shoesModel}
+                    handleCameraMove={handleCameraMove}
+                    {...shoesModelAnnotation}
+                />
 
-                {/*<AnimatedModel*/}
-                {/*    name='accessories'*/}
-                {/*    cameraToDefault={cameraToDefault}*/}
-                {/*    handleModelChange={handleModelChange('accessoriesModelPath')}*/}
-                {/*    onClick={handleCameraMove}*/}
-                {/*    model={accessoriesModel}*/}
-                {/*    handleCameraMove={handleCameraMove}*/}
-                {/*    {...accessoriesModelAnnotation}*/}
-                {/*/>*/}
+                <AnimatedModel
+                    name='accessories'
+                    cameraToDefault={cameraToDefault}
+                    handleModelChange={handleModelChange('accessoriesModelPath')}
+                    onClick={handleCameraMove}
+                    model={accessoriesModel}
+                    handleCameraMove={handleCameraMove}
+                    {...accessoriesModelAnnotation}
+                />
 
                 <Environment preset="dawn" background blur={0.75}/>
                 <AccumulativeShadows temporal frames={100} color="orange" colorBlend={2} toneMapped={true}
