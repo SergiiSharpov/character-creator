@@ -1,37 +1,102 @@
-import {CameraControls, Html, Stage, useGLTF} from "@react-three/drei";
-import {useThree} from "@react-three/fiber";
+import {AccumulativeShadows, Environment, Html, OrbitControls, RandomizedLight, useGLTF, useAnimations as useAnimationsDrei} from "@react-three/drei";
+import {useFrame, useThree} from "@react-three/fiber";
 
 import gsap from 'gsap'
-import {useControls} from "leva";
-import React, {useCallback, useEffect, useState} from "react";
-import {ReactSVG} from "react-svg";
-import {Quaternion, Vector3} from "three";
+import React, {useCallback, useEffect, useRef, useState} from "react";
+import {AnimationMixer, Group, Quaternion, Vector3, Event} from "three";
 import {useAsyncModel} from "../../hooks/useAsyncModel";
-import AnimatedModel from "../AnimatedModel";
-import Popover, {AnnotationType} from "../ui/Popover";
+import {useAppContextSelector} from "../../providers/ContextProvider";
+import {useLoaderStore} from "../../store";
 import {
-    accessoriesModelAnnotation,
     accessoriesModelsPaths,
-    animationsAnnotation,
-    bottomModelAnnotation,
     bottomModelsPaths,
-    hairstyleModelAnnotation,
     hairstylesModelsPaths,
-    shoesModelAnnotation,
     shoesModelsPaths,
-    topModelAnnotation,
     topModelsPaths
 } from "./constants";
 import {useAnimations} from "./hooks";
-import {useAudio} from "./hooks/useAudio";
 import {useMaterials} from "./hooks/useMaterials";
 import {ModelsPathsType} from "./types";
 
+const hair = {
+    "/models/hairstyles/1.glb": "Accessories_1.hw_1_2",
+    "/models/hairstyles/2.glb": "Accessories_1.hw_1_3",
+    "/models/hairstyles/3.glb": "Accessories_1.hw_1_4",
+    "/models/hairstyles/4.glb": "Accessories_1.hw_1_5",
+    "/models/hairstyles/5.glb": "Accessories_1.hw_1_6",
+    "/models/hairstyles/6.glb": "Accessories_1.hw_1_7",
+    "/models/hairstyles/7.glb": "Accessories_1.hw_1_8",
+    "/models/hairstyles/8.glb": "Accessories_1.hw_1_9",
+    "/models/hairstyles/9.glb": "Accessories_1.hw_1_10"
+};
+
 const Character = () => {
+    // const thad = useGLTF('/models/thad.glb');
+    // const thad = useGLTF('/models/thad.glb');
+    const thad = useGLTF('/models/thad_.glb');
 
-    const thad = useGLTF('/models/thad.glb');
+    console.log({thad})
 
-    const {handleAnimationRandomChange, handleSetAnimation} = useAnimations(thad)
+    const loading = useLoaderStore(state => state.loading)
+
+    const groupRefAnimation = useRef<Group | null>(null);
+
+    const [thadAnimationName, setThadAnimationNamer] = useState('walk')
+
+    const thadRef = useRef<Group | null>(null);
+
+    const {actions, mixer, clips, names} = useAnimationsDrei(thad.animations, thadRef)
+
+    console.log({actions, mixer, clips, names})
+
+    useEffect(() => {
+        if(!actions || !mixer || loading) return
+        const action = actions['All Animations']
+
+        if(!action) return
+
+        action.reset().fadeIn(0.5).play()
+        // action.time = 8.758
+        mixer.update(8.758)
+
+        const mixerEvent = (event:  Event) => {
+            console.log('mixer event', {event})
+        }
+
+        mixer.addEventListener('loop', mixerEvent)
+
+        return () => {
+            action.fadeOut(0.5).stop()
+
+            mixer.removeEventListener('loop', mixerEvent)
+        }
+
+    }, [actions, mixer, loading])
+
+    useFrame(() => {
+        if (!mixer || loading || !actions) return
+
+        const action = actions['All Animations']
+
+        if(!action) return
+
+        const time = mixer.time
+        console.log(time)
+        if(thadAnimationName === 'walk' && time >= 10.11) {
+            console.log('end of animation')
+            // action.fadeOut(0.5)
+            mixer.time = 8.758
+
+            action.time = 8.758
+
+            // mixer.update(8.758)
+        }
+
+    })
+
+    const animationObjectGroup = useAppContextSelector('animationObjectGroup')
+
+    const {handleAnimationRandomChange, handleSetAnimation} = useAnimations(groupRefAnimation)
 
     const camera = useThree(state => state.camera)
 
@@ -48,6 +113,8 @@ const Character = () => {
     const hairstylesModel = useAsyncModel(modelsPaths['hairstyleModelPath']);
     const shoesModel = useAsyncModel(modelsPaths['shoesModelPath']);
     const accessoriesModel = useAsyncModel(modelsPaths['accessoriesModelPath']);
+    // const accessoriesModel = useAsyncModel('/models/1.glb');
+
 
     const handleModelChange = (type: keyof ModelsPathsType) => (value: string) => {
         console.log('clicked')
@@ -58,28 +125,35 @@ const Character = () => {
         }))
     }
 
-    const {handleSetMaterialColor} = useMaterials(thad)
+    const hairstyleModalPath = modelsPaths['hairstyleModelPath']
 
-    useAudio(thad)
+    useMaterials(thad)
+    // useAudio(thad)
 
-    const [cameraControlsRef, setCameraControlsRef] = useState<CameraControls | null>(null)
+    useEffect(() => {
+        accessoriesModel?.traverse((child: any) => {
+            if (child.morphTargetDictionary) {
 
+                Object.keys(child.morphTargetInfluences).map(item => {
+                    child.morphTargetInfluences[item] = 0
+                })
+
+                // @ts-ignore
+                const morphTarget = child.morphTargetDictionary[hair[hairstyleModalPath]]
+                // @ts-ignore
+                child.morphTargetInfluences[morphTarget] = 1
+            }
+        })
+    }, [accessoriesModel, hairstyleModalPath]);
 
     const handleCameraMove = (position: Vector3, rotation: Quaternion) => {
 
         gsap.to(camera.position, {...position})
         gsap.to(camera.quaternion, {...rotation})
-        if (!cameraControlsRef) return null
-
-        console.log({cameraControlsRef})
-
-        // cameraControlsRef.moveTo(0.35, 1.5, 0)
-
-        // gsap.to(cameraControlsRef.camera.position, {...position})
-        // gsap.to(cameraControlsRef.camera.quaternion, {...rotation})
     }
 
     const cameraToDefault = useCallback(() => {
+        // gsap.to(camera.position, {x: 0, y: 2, z: 3.2, duration: 0.7})
         gsap.to(camera.position, {x: 0, y: 1, z: 2, duration: 0.7})
         gsap.to(camera.quaternion, {x: -0.229, y: 0, z: 0, w: 1, duration: 0.7})
     }, [])
@@ -90,14 +164,11 @@ const Character = () => {
                 cameraToDefault()
             }
         }
-
         window.addEventListener('keydown', handleEscape)
-
         return () => {
             window.removeEventListener('keydown', handleEscape)
         }
     }, []);
-
 
     // const {x, y, z} = useControls({
     //     y: {
@@ -129,108 +200,121 @@ const Character = () => {
     //     }
     // })
 
+    const scene = useThree(state => state.scene);
+
+    // useEffect(() => {
+    //     if (!thad) return
+    //     const helpers: SkeletonHelper[] = []
+    //     console.log({thad})
+    //
+    //     helpers.push(new SkeletonHelper(thad.scene?.children[0]))
+    //     helpers.forEach((helper) => {
+    //         scene.add(helper);
+    //     })
+    //
+    //     return () => {
+    //         helpers.forEach((helper) => {
+    //             scene.remove(helper);
+    //         })
+    //     }
+    //
+    // }, [thad])
+
+    // useEffect(() => {
+    //     console.log(camera.position, 'camera position')
+    // }, [camera]);
+
+    useEffect(() => {
+
+    }, []);
+
     return (
         <>
-            <Stage
-                adjustCamera={false}
-                environment={{files: 'env/kiara_1_dawn_1k.hdr', background: true, blur: 0.75}}
+            <group
+                position={[0, -1, 0]}
+                ref={groupRefAnimation}
             >
-                <group>
-                    <primitive object={thad.scene}/>
+
+                {/*<AnimatedModel*/}
+                {/*    name='top'*/}
+                {/*    cameraToDefault={cameraToDefault}*/}
+                {/*    handleModelChange={handleModelChange('topModelPath')}*/}
+                {/*    onClick={handleCameraMove}*/}
+                {/*    model={topModel}*/}
+                {/*    handleCameraMove={handleCameraMove}*/}
+                {/*    {...topModelAnnotation}*/}
+                {/*/>*/}
+
+                {/*<primitive*/}
+                {/*    name='top'*/}
+                {/*    object={top.scene}*/}
+                {/*/>*/}
+
+                <group ref={thadRef}>
+                    <primitive
+                        name='thad'
+                        object={thad.scene}
+                    />
                 </group>
 
-                {/*<mesh scale={0.1} position={[x, y, z]}>*/}
-                {/*    <boxGeometry args={[1, 1, 1]}/>*/}
-                {/*    <meshBasicMaterial color={'#fff'}/>*/}
-                {/*</mesh>*/}
-
-                <AnimatedModel
-                    cameraToDefault={cameraToDefault}
-                    handleModelChange={handleModelChange('topModelPath')}
-                    onClick={handleCameraMove}
-                    model={topModel}
-                    handleCameraMove={handleCameraMove}
-                    {...topModelAnnotation}
-                />
-                <AnimatedModel
-                    cameraToDefault={cameraToDefault}
-                    handleModelChange={handleModelChange('bottomModelPath')}
-                    onClick={handleCameraMove}
-                    handleCameraMove={handleCameraMove}
-                    model={bottomModel}
-                    {...bottomModelAnnotation}
-                />
-                <AnimatedModel
-                    cameraToDefault={cameraToDefault}
-                    handleModelChange={handleModelChange('hairstyleModelPath')}
-                    onClick={handleCameraMove}
-                    model={hairstylesModel}
-                    handleCameraMove={handleCameraMove}
-                    {...hairstyleModelAnnotation}
-                />
-                <AnimatedModel
-                    cameraToDefault={cameraToDefault}
-                    handleModelChange={handleModelChange('shoesModelPath')}
-                    onClick={handleCameraMove}
-                    model={shoesModel}
-                    handleCameraMove={handleCameraMove}
-                    {...shoesModelAnnotation}
-                />
-
-                <AnimatedModel
-                    cameraToDefault={cameraToDefault}
-                    handleModelChange={handleModelChange('accessoriesModelPath')}
-                    onClick={handleCameraMove}
-                    model={accessoriesModel}
-                    handleCameraMove={handleCameraMove}
-                    {...accessoriesModelAnnotation}
-                />
-
-                <Html
-                    position={animationsAnnotation.annotationPosition}
-                >
-                    <Popover
-                        cameraToDefault={cameraToDefault}
-                        onClick={handleSetAnimation}
-                        annotationType={animationsAnnotation.annotationLabel as AnnotationType}
-                    >
-                        <div
-                            onClick={() => {
-                                handleCameraMove(animationsAnnotation.cameraPosition, animationsAnnotation.cameraRotation)
-                            }}
-                            className='rounded-[5px] cursor-pointer grid place-items-center w-[70px] h-[70px] icon-gradient'>
-                            <ReactSVG src={animationsAnnotation.icon}/>
-                        </div>
-                    </Popover>
+                <Html>
+                    <button
+                        onClick={handleAnimationRandomChange}
+                    >change animation
+                    </button>
                 </Html>
-            </Stage>
 
-
-            {/*<OrbitControls*/}
-            {/*    // maxPolarAngle={75 * (Math.PI / 180)}*/}
-            {/*    // minPolarAngle={75 * (Math.PI / 180)}*/}
-            {/*    // enablePan={false}*/}
-            {/*    // target={thad.scene.position.clone()}*/}
-            {/*    // makeDefault*/}
-            {/*/>*/}
-
-            {/*<CameraControls*/}
-            {/*    enabled*/}
-            {/*    ref={setCameraControlsRef}*/}
-            {/*/>*/}
-
-            <Html
-                fullscreen
-                wrapperClass="html-wrap"
-                className='z-50 relative'
-            >
-                {/*<AppearanceSettings*/}
-                {/*    handleSetSkinColor={handleSetMaterialColor}*/}
-                {/*    modelsPaths={modelsPaths}*/}
-                {/*    handleModelChange={handleModelChange}*/}
+                {/*<AnimatedModel*/}
+                {/*    name='bottom'*/}
+                {/*    cameraToDefault={cameraToDefault}*/}
+                {/*    handleModelChange={handleModelChange('bottomModelPath')}*/}
+                {/*    onClick={handleCameraMove}*/}
+                {/*    handleCameraMove={handleCameraMove}*/}
+                {/*    model={bottomModel}*/}
+                {/*    {...bottomModelAnnotation}*/}
                 {/*/>*/}
-            </Html>
+                {/*<AnimatedModel*/}
+                {/*    name='hairstyles'*/}
+                {/*    cameraToDefault={cameraToDefault}*/}
+                {/*    handleModelChange={handleModelChange('hairstyleModelPath')}*/}
+                {/*    onClick={handleCameraMove}*/}
+                {/*    model={hairstylesModel}*/}
+                {/*    handleCameraMove={handleCameraMove}*/}
+                {/*    {...hairstyleModelAnnotation}*/}
+                {/*/>*/}
+                {/*<AnimatedModel*/}
+                {/*    name='shoes'*/}
+                {/*    cameraToDefault={cameraToDefault}*/}
+                {/*    handleModelChange={handleModelChange('shoesModelPath')}*/}
+                {/*    onClick={handleCameraMove}*/}
+                {/*    model={shoesModel}*/}
+                {/*    handleCameraMove={handleCameraMove}*/}
+                {/*    {...shoesModelAnnotation}*/}
+                {/*/>*/}
+
+                {/*<AnimatedModel*/}
+                {/*    name='accessories'*/}
+                {/*    cameraToDefault={cameraToDefault}*/}
+                {/*    handleModelChange={handleModelChange('accessoriesModelPath')}*/}
+                {/*    onClick={handleCameraMove}*/}
+                {/*    model={accessoriesModel}*/}
+                {/*    handleCameraMove={handleCameraMove}*/}
+                {/*    {...accessoriesModelAnnotation}*/}
+                {/*/>*/}
+
+                <Environment preset="dawn" background blur={0.75}/>
+                <AccumulativeShadows temporal frames={100} color="orange" colorBlend={2} toneMapped={true}
+                                     alphaTest={0.75} opacity={2} scale={12}>
+                    <RandomizedLight intensity={Math.PI} amount={8} radius={4} ambient={0.5} position={[5, 5, -10]}
+                                     bias={0.001}/>
+                </AccumulativeShadows>
+
+                <OrbitControls
+                    enabled={false}
+                />
+            </group>
         </>
+
     )
 }
 

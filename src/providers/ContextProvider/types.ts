@@ -1,8 +1,9 @@
 import {ReactNode} from "react";
-import {AnimationObjectGroup} from "three";
+import {AnimationObjectGroup, Object3D, Event} from "three";
 
 export interface ContextType {
-    animationObjectGroup: AnimationObjectGroup
+    animationObjectGroup: AnimationObjectGroup | Object3D<Event> | null
+    setAnimationObjectGroup: (animationObjectGroup: AnimationObjectGroup | Object3D<Event>) => void
 }
 
 export interface ContextProviderProps {

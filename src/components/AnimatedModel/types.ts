@@ -1,6 +1,7 @@
 import {AnimationClip, Group, Quaternion, Vector3} from "three";
 
 export type AnimatedModelProps = {
+    name?: string
     animation?: AnimationClip
     model: Group | null
     handleModelChange: (key: string) => void

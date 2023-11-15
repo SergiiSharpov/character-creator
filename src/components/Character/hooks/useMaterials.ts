@@ -14,10 +14,6 @@ export const useMaterials = (model: GLTF) => {
     useEffect(() => {
         if (!model) return
         model.scene.traverse((child: any) => {
-            if(child.morphTargetDictionary) {
-
-                console.log(child, 'morph')
-            }
             if (child.isMesh) {
                 const oldMat = child.material as (MeshPhongMaterial | MeshPhongMaterial[]);
 

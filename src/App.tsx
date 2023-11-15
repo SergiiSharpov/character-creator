@@ -11,13 +11,14 @@ const App = () => {
                 <Canvas
                     camera={{
                         fov: 60,
+                        // position: [0, 2, 3.2],
                         position: [0, 1, 2],
                     }}
                 >
                     <HomePage/>
                 </Canvas>
             </Suspense>
-            <Loader/>
+            {/*<Loader/>*/}
         </div>
     );
 }

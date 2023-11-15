@@ -117,31 +117,32 @@ type AnnotationType = {
 
 export const hairstyleModelAnnotation = {
     annotationPosition: new Vector3(0.23, 1.7, 0),
-    cameraPosition: new Vector3(0.35, 0.95, 0.3),
-    cameraRotation: new Quaternion(-0.23, 0.2, 0),
+    // cameraPosition: new Vector3(0.75, 1.15, 1.3),
+    cameraPosition: new Vector3(0.75, 1.15, 1.3),
+    cameraRotation: new Quaternion(-0.23, 0.28, 0),
     annotationLabel: 'Hairstyles',
     icon: '/icons/hairstyles.svg'
 }
 
 export const topModelAnnotation: AnnotationType = {
     annotationPosition: new Vector3(0.35, 1.5, 0),
-    cameraPosition: new Vector3(0.43, 0.86, 0.35),
-    cameraRotation: new Quaternion(-0.41, 0.2, 0),
+    cameraPosition: new Vector3(0.65, 0.75, 1.3),
+    cameraRotation: new Quaternion(-0.23, 0.28, 0),
     annotationLabel: 'Top',
     icon: '/icons/top.svg'
 }
 
 export const bottomModelAnnotation = {
     annotationPosition: new Vector3(0.38, 0.85, 0),
-    cameraPosition: new Vector3(0.4, 0.3, 0.45),
-    cameraRotation: new Quaternion(-0.39, 0.22, 0),
+    cameraPosition: new Vector3(0.65, 0.3, 1.3),
+    cameraRotation: new Quaternion(-0.25, 0.22, 0),
     annotationLabel: 'Bottom',
     icon: '/icons/bottom.svg'
 }
 
 export const shoesModelAnnotation = {
     annotationPosition: new Vector3(0.3, 0.3, 0),
-    cameraPosition: new Vector3(0.35, -0.3, 0.4),
+    cameraPosition: new Vector3(0.65, 0.2, 1.3),
     cameraRotation: new Quaternion(-0.32, 0.26, 0),
     annotationLabel: 'Shoes',
     icon: '/icons/shoes.svg'
@@ -149,7 +150,7 @@ export const shoesModelAnnotation = {
 
 export const accessoriesModelAnnotation = {
     annotationPosition: new Vector3(0.13, 1.9, 0),
-    cameraPosition: new Vector3(0.35, 0.95, 0.3),
+    cameraPosition: new Vector3(0.85, 1.15, 1.3),
     cameraRotation: new Quaternion(-0.23, 0.2, 0),
     annotationLabel: 'Accessories',
     icon: '/icons/shoes.svg'

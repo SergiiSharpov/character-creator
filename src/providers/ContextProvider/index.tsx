@@ -1,23 +1,27 @@
 import React, {createContext, useContext, useState} from 'react';
-import {AnimationObjectGroup} from "three";
+import {AnimationObjectGroup, Object3D, Event} from "three";
 import {ContextProviderProps, ContextType} from "./types";
 
 const animationObjectGroup = new AnimationObjectGroup()
 
 const Context = createContext<ContextType>({
-    animationObjectGroup
+    animationObjectGroup,
+    setAnimationObjectGroup: () => {
+    }
 });
 
-const ContextProvider = ({
-    children
-                         }: ContextProviderProps) => {
+const ContextProvider = (
+    {
+        children
+    }: ContextProviderProps) => {
 
-    const [state, setState] = useState<ContextType>({
-        animationObjectGroup
-    })
+    const [state, setState] = useState<AnimationObjectGroup | Object3D<Event> | null>(animationObjectGroup)
 
     return (
-        <Context.Provider value={state}>
+        <Context.Provider value={{
+            animationObjectGroup: state,
+            setAnimationObjectGroup: (animationObjectGroup: AnimationObjectGroup | Object3D<Event>) => setState(animationObjectGroup)
+        }}>
             {children}
         </Context.Provider>
     );
