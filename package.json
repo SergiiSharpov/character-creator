@@ -24,6 +24,7 @@
     "leve": "^1.2.1",
     "lucide-react": "^0.268.0",
     "npm": "^9.8.0",
+    "postcss-cssnext": "^3.1.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-scripts": "5.0.1",
@@ -35,6 +36,7 @@
     "zustand": "^4.4.1"
   },
   "scripts": {
+    "postinstall": "node script.js",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
@@ -62,6 +64,7 @@
     "autoprefixer": "^10.4.14",
     "postcss": "^8.4.27",
     "postcss-import": "^15.1.0",
+    "postcss-nested": "^6.0.1",
     "postcss-nesting": "^12.0.1",
     "tailwindcss": "^3.3.3"
   }
