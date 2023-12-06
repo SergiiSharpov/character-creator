@@ -14,7 +14,7 @@ export const useAnimations = () => {
     const charge = useGLTF('/animations/__charge.glb');
     const dance = useGLTF('/animations/__dancing.glb');
     const pointing = useGLTF('/animations/__pointingGesture.glb');
-    const surprised = useGLTF('/animations/__surptised.glb');
+    // const surprised = useGLTF('/animations/__surptised.glb');
 
     const [mixer] = useState(() => new AnimationMixer(animationObjectGroup!))
 

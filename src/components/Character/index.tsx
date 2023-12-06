@@ -87,7 +87,7 @@ const Character = () => {
     useEffect(() => {
         accessoriesModel?.traverse((child: any) => {
             if (child.morphTargetDictionary) {
-                Object.keys(child.morphTargetInfluences).map(item => {
+                Object.keys(child.morphTargetInfluences).forEach(item => {
                     child.morphTargetInfluences[item] = 0
                 })
                 // @ts-ignore
@@ -105,6 +105,7 @@ const Character = () => {
     const cameraToDefault = useCallback(() => {
         gsap.to(camera.position, {...defaultCameraPosition})
         gsap.to(camera.quaternion, {...defaultCameraRotation})
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
     useEffect(() => {
@@ -117,6 +118,7 @@ const Character = () => {
         return () => {
             window.removeEventListener('keydown', handleEscape)
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     useEffect(() => {
@@ -129,6 +131,7 @@ const Character = () => {
             animationObjectGroup.remove(thad.scene)
             thad.scene.removeFromParent()
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [thad]);
 
     return (

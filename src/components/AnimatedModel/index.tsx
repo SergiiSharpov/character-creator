@@ -1,9 +1,8 @@
 import {Html} from '@react-three/drei'
-import {useThree} from "@react-three/fiber";
 import gsap from 'gsap'
 import {useEffect, useRef} from "react";
 import {ReactSVG} from 'react-svg'
-import {Group, SkeletonHelper} from "three";
+import {Group} from "three";
 import {useAppContextSelector} from "../../providers/ContextProvider";
 import Popover, {AnnotationType} from "../ui/Popover";
 import {AnimatedModelProps} from "./types";
@@ -23,7 +22,6 @@ const AnimatedModel: React.FC<AnimatedModelProps> = (
     }) => {
 
     const animationObjectGroup = useAppContextSelector('animationObjectGroup')
-    const scene = useThree(state => state.scene);
 
     useEffect(() => {
         if (!model || !animationObjectGroup) return
@@ -59,6 +57,7 @@ const AnimatedModel: React.FC<AnimatedModelProps> = (
         return () => {
             window.removeEventListener('keydown', handleEscape)
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     useEffect(() => {
@@ -80,7 +79,6 @@ const AnimatedModel: React.FC<AnimatedModelProps> = (
                 ref={annotationRef}
             >
                 <Html
-                    // position={annotationPosition}
                 >
                     <Popover
                         // @ts-ignore

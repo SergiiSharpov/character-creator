@@ -13,7 +13,7 @@ const ContextProvider = (
         children
     }: ContextProviderProps) => {
 
-    const [state, setState] = useState<AnimationObjectGroup | Object3D<Event> | null>(animationObjectGroup)
+    const [state] = useState<AnimationObjectGroup | Object3D<Event> | null>(animationObjectGroup)
 
     return (
         <Context.Provider value={{

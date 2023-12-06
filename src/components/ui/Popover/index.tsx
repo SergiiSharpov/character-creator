@@ -18,6 +18,7 @@ const Popover: FC<PopoverProps> = ({children, annotationType, onClick, cameraToD
 
     const filteredList = useMemo(() => {
         return menuConfig[annotationType]["thumbnailsPaths"].filter(item => item.toUpperCase().includes(searchValue.toUpperCase()))
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [searchValue])
 
     const [activeIndex, setActiveIndex] = useState(0)
