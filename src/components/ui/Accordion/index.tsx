@@ -16,7 +16,7 @@ const Accordion = ({value, list, handleModelChange, handleSetSkinColor}: Accordi
                 <ReactAccordionContent>
                     <div className='grid grid-cols-5 gap-2'>{list.map((item, index) => {
 
-                        const isColor = value === 'skin'
+                        const isSkin = value === 'skin'
 
                         return <div
                             key={index}
@@ -24,16 +24,16 @@ const Accordion = ({value, list, handleModelChange, handleSetSkinColor}: Accordi
                                 activeIndex === index && 'border-2 border-white'
                             )}
                             onClick={() => {
-                                if(isColor) {
+                                if(isSkin) {
                                     handleSetSkinColor && handleSetSkinColor(item)
                                 } else {
                                     handleModelChange(item)
                                 }
                                 setActiveIndex(index)
                             }}
-                            style={{ background: isColor ? item : '#12c795'}}
+                            style={{ background: isSkin ? item : '#12c795'}}
                         >
-                            {!isColor && item.replace(/\D/g, '')}
+                            {!isSkin && item.replace(/\D/g, '')}
                         </div>
                     })}</div>
                 </ReactAccordionContent>

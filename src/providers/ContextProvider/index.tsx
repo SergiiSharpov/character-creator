@@ -6,8 +6,6 @@ const animationObjectGroup = new AnimationObjectGroup()
 
 const Context = createContext<ContextType>({
     animationObjectGroup,
-    setAnimationObjectGroup: () => {
-    }
 });
 
 const ContextProvider = (
@@ -20,7 +18,6 @@ const ContextProvider = (
     return (
         <Context.Provider value={{
             animationObjectGroup: state,
-            setAnimationObjectGroup: (animationObjectGroup: AnimationObjectGroup | Object3D<Event>) => setState(animationObjectGroup)
         }}>
             {children}
         </Context.Provider>

@@ -33,10 +33,10 @@ export const useAudio = (model: GLTF) => {
             setMorphTarget(model, 'Game_Tongue_1', value, 0)
         })
 
-        Object.values(visemeTeeth1).forEach((value: string) => {
-            setMorphTarget(model, 'Base_Teeth_primitive1', value, 0)
-            setMorphTarget(model, 'Base_Teeth_primitive0', value, 0)
-        })
+        // Object.values(vма4isemeTeeth1).forEach((value: string) => {
+        //     setMorphTarget(model, 'Base_Teeth_primitive1', value, 0)
+        //     setMorphTarget(model, 'Base_Teeth_primitive0', value, 0)
+        // })
 
         Object.values(Game_Head_primitive0).forEach((value: string) => {
             setMorphTarget(model, 'Game_Head_primitive0', value, 0)

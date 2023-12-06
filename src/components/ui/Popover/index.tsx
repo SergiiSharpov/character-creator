@@ -1,7 +1,5 @@
 import * as RadixPopover from '@radix-ui/react-popover'
-import {useThree} from "@react-three/fiber";
-import gsap from "gsap";
-import React, {FC, useCallback, useMemo, useState} from 'react';
+import React, {FC, useMemo, useState} from 'react';
 import {cn} from "../../../utils";
 import {menuConfig} from "../../Character/constants";
 
@@ -26,20 +24,19 @@ const Popover: FC<PopoverProps> = ({children, annotationType, onClick, cameraToD
 
     return (
         <RadixPopover.Root>
-            <RadixPopover.Trigger asChild>
-                {children}
-            </RadixPopover.Trigger>
-            <RadixPopover.Portal>
+            <RadixPopover.Anchor asChild>
+                <RadixPopover.Trigger asChild>
+                    {children}
+                </RadixPopover.Trigger>
+            </RadixPopover.Anchor>
                 <RadixPopover.Content
-                    // onInteractOutside={() => cameraToDefault()}
                     onEscapeKeyDown={cameraToDefault}
                     side={'right'}
                     align={'start'}
                     className="rounded  w-[200px] bg-white h-[345px]
                                shadow-[0_10px_38px_-10px_hsla(206,22%,7%,.35),0_10px_20px_-15px_hsla(206,22%,7%,.2)]
-                               outline-none will-change-[transform,opacity] data-[state=open]:data-[side=top]:animate-slideDownAndFade
-                               data-[state=open]:data-[side=right]:animate-slideLeftAndFade data-[state=open]:data-[side=bottom]:animate-slideUpAndFade
-                               data-[state=open]:data-[side=left]:animate-slideRightAndFade menu-gradient"
+                               outline-none will-change-[transform,opacity]
+                               menu-gradient"
                     sideOffset={5}
                 >
                     <div className="flex flex-col gap-2.5 body-part-block">
@@ -87,7 +84,6 @@ const Popover: FC<PopoverProps> = ({children, annotationType, onClick, cameraToD
                     {/*</RadixPopover.Close>*/}
                     {/*<RadixPopover.Arrow className="fill-[#6F5CE7]" />*/}
                 </RadixPopover.Content>
-            </RadixPopover.Portal>
         </RadixPopover.Root>
     );
 };

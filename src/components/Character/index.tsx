@@ -6,7 +6,6 @@ import React, {useCallback, useEffect, useRef, useState} from "react";
 import {Group, Quaternion, Vector3} from "three";
 import {useAsyncModel} from "../../hooks/useAsyncModel";
 import {useAppContextSelector} from "../../providers/ContextProvider";
-import {useLoaderStore} from "../../store";
 import AnimatedModel from "../AnimatedModel";
 import {
     accessoriesModelAnnotation,
@@ -36,6 +35,15 @@ const hair = {
     "/models/hairstyles/9.glb": "Accessories_1.hw_1_10"
 };
 
+const defaultCameraPosition = {
+    x: 0,
+    y: 1,
+    z: 2,
+    duration: .75
+}
+
+const defaultCameraRotation = {x: -0.229, y: 0, z: 0, w: 1, duration: 0.7}
+
 const Character = () => {
     const thad = useGLTF('/models/thad.glb');
 
@@ -64,7 +72,6 @@ const Character = () => {
 
 
     const handleModelChange = (type: keyof ModelsPathsType) => (value: string) => {
-        console.log('clicked')
         handleAnimationRandomChange()
         setModelsPaths(state => ({
             ...state,
@@ -80,29 +87,24 @@ const Character = () => {
     useEffect(() => {
         accessoriesModel?.traverse((child: any) => {
             if (child.morphTargetDictionary) {
-
                 Object.keys(child.morphTargetInfluences).map(item => {
                     child.morphTargetInfluences[item] = 0
                 })
-
                 // @ts-ignore
                 const morphTarget = child.morphTargetDictionary[hair[hairstyleModalPath]]
-                // @ts-ignore
                 child.morphTargetInfluences[morphTarget] = 1
             }
         })
     }, [accessoriesModel, hairstyleModalPath]);
 
     const handleCameraMove = (position: Vector3, rotation: Quaternion) => {
-
         gsap.to(camera.position, {...position})
         gsap.to(camera.quaternion, {...rotation})
     }
 
     const cameraToDefault = useCallback(() => {
-        // gsap.to(camera.position, {x: 0, y: 2, z: 3.2, duration: 0.7})
-        gsap.to(camera.position, {x: 0, y: 1, z: 2, duration: 0.7})
-        gsap.to(camera.quaternion, {x: -0.229, y: 0, z: 0, w: 1, duration: 0.7})
+        gsap.to(camera.position, {...defaultCameraPosition})
+        gsap.to(camera.quaternion, {...defaultCameraRotation})
     }, [])
 
     useEffect(() => {
@@ -122,6 +124,7 @@ const Character = () => {
         if (!animationObjectGroup || !thad.scene) return
 
         animationObjectGroup.add(thad.scene)
+
         return () => {
             animationObjectGroup.remove(thad.scene)
             thad.scene.removeFromParent()
@@ -135,7 +138,7 @@ const Character = () => {
                 ref={groupRefAnimation}
             >
 
-                <group>
+                <group onClick={handleAnimationRandomChange}>
                     <primitive
                         name='thad'
                         object={thad.scene}

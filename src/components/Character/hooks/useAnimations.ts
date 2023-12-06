@@ -18,13 +18,6 @@ export const useAnimations = () => {
 
     const [mixer] = useState(() => new AnimationMixer(animationObjectGroup!))
 
-    idle.animations[0].name = 'idle'
-    walk.animations[0].name = 'walk'
-    charge.animations[0].name = 'charge'
-    dance.animations[0].name = 'dance'
-    pointing.animations[0].name = 'pointing'
-    surprised.animations[0].name = 'surprised'
-
     const animations = [
         idle.animations[0],
         walk.animations[0],
@@ -45,13 +38,11 @@ export const useAnimations = () => {
     }
 
     const handleAnimationRandomChange = () => {
-
         setAnimationIndex(generateRandomAnimationIndex())
     }
 
 
     const handleSetAnimation = <T>(key: T) => {
-
         setAnimationIndex(key as number)
     }
 
@@ -79,7 +70,8 @@ export const useAnimations = () => {
         return () => {
             action.fadeOut(0.5)
         }
-    }, [mixer, animation]);
+    }, [mixer, animation, animationIndex]);
+
     useFrame((state, delta) => {
         mixer && mixer.update(delta);
     })
